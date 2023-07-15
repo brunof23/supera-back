@@ -1,7 +1,7 @@
 package br.com.banco.Service;
 
+import br.com.banco.Constants.Constants;
 import br.com.banco.Entity.TransferenciaEntity;
-import br.com.banco.Repository.ContaRepository;
 import br.com.banco.Repository.TransferenciaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,27 +15,10 @@ import java.util.List;
 public class BancoService {
     private final TransferenciaRepository transferenciaRepository;
 
-    private final ContaRepository contaRepository;
-
     @Autowired
-    public BancoService(TransferenciaRepository transferenciaRepository, ContaRepository contaRepository) {
+    public BancoService(TransferenciaRepository transferenciaRepository) {
         this.transferenciaRepository = transferenciaRepository;
-        this.contaRepository = contaRepository;
     }
-
-//    public List<TransferenciaEntity> obterTransferencias(Long numeroConta, LocalDateTime dataInicial, LocalDateTime dataFinal, String nomeOperador) {
-//        if (numeroConta == null && dataInicial == null && dataFinal == null && nomeOperador == null) {
-//            return transferenciaRepository.findAll();
-//        } else if (dataInicial != null && dataFinal != null && nomeOperador != null) {
-//            return transferenciaRepository.findByDataTransferenciaBetweenAndNomeOperadorTransacao(dataInicial, dataFinal, nomeOperador);
-//        } else if (dataInicial != null && dataFinal != null) {
-//            return transferenciaRepository.findByDataTransferenciaBetween(dataInicial, dataFinal);
-//        } else if (nomeOperador != null) {
-//            return transferenciaRepository.findByNomeOperadorTransacao(nomeOperador);
-//        } else {
-//            return contaRepository.findAllById(numeroConta);
-//        }
-//    }
 
     public List<TransferenciaEntity> allTransferencias() {
         return transferenciaRepository.findAll();
@@ -53,18 +36,15 @@ public class BancoService {
         return transferenciaRepository.transferenciasAllFiltros(dataInicial, dataFinal, nomeOperador);
     }
 
-
-
-
     public BigDecimal calcularSaldoTotal(List<TransferenciaEntity> transferencias) {
         BigDecimal saldoTotal = BigDecimal.ZERO;
         for (TransferenciaEntity transferencia : transferencias) {
             BigDecimal valor = transferencia.getValor();
 
-            if (transferencia.getTipo().equals("SAQUE")) {
+            if (transferencia.getTipo().equals(Constants.TIPO_OPERACAO_SAQUE)) {
                 BigDecimal valorPositivo = valor.abs();
                 saldoTotal = saldoTotal.subtract(valorPositivo);
-            } else if (transferencia.getTipo().equals("TRANSFERENCIA") || transferencia.getTipo().equals("DEPOSITO")) {
+            } else if (transferencia.getTipo().equals(Constants.TIPO_OPERACAO_TRANSFERENCIA) || transferencia.getTipo().equals(Constants.TIPO_OPERACAO_DEPOSITO)) {
                 saldoTotal = saldoTotal.add(valor);
             }
         }
@@ -77,9 +57,10 @@ public class BancoService {
             LocalDateTime dataTransferencia = transferencia.getDataTransferencia();
             if (dataTransferencia.isAfter(dataInicial) && dataTransferencia.isBefore(dataFinal)) {
                 BigDecimal valor = transferencia.getValor();
-                if ("SAIDA".equals(transferencia.getTipo())) {
-                    saldoTotalPeriodo = saldoTotalPeriodo.subtract(valor);
-                } else if ("ENTRADA".equals(transferencia.getTipo())) {
+                if (transferencia.getTipo().equals(Constants.TIPO_OPERACAO_SAQUE)) {
+                    BigDecimal valorPositivo = valor.abs();
+                    saldoTotalPeriodo = saldoTotalPeriodo.subtract(valorPositivo);
+                } else if (transferencia.getTipo().equals(Constants.TIPO_OPERACAO_TRANSFERENCIA) || transferencia.getTipo().equals(Constants.TIPO_OPERACAO_DEPOSITO)) {
                     saldoTotalPeriodo = saldoTotalPeriodo.add(valor);
                 }
             }

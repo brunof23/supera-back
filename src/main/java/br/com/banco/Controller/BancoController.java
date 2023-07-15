@@ -29,7 +29,7 @@ public class BancoController {
 
     @GetMapping("/transferencias-por-conta/{numeroConta}")
     public ResponseEntity<List<TransferenciaEntity>> transferenciasByConta(
-            @PathVariable(value = "numeroConta", required = true) Long numeroConta) {
+            @PathVariable(value = "numeroConta") Long numeroConta) {
 
         List<TransferenciaEntity> transferencias = bancoService.transferenciasByNumConta(numeroConta);
         return ResponseEntity.ok(transferencias);
@@ -72,9 +72,9 @@ public class BancoController {
 
     @GetMapping("/saldo-total-periodo")
     public ResponseEntity<BigDecimal> calcularSaldoTotalPeriodo(
-            @PathVariable(value = "numeroConta") Long numeroConta,
-            @PathVariable(value = "dataInicial") LocalDateTime dataInicial,
-            @PathVariable(value = "dataFinal") LocalDateTime dataFinal) {
+            @RequestParam(value = "numeroConta") Long numeroConta,
+            @RequestParam(value = "dataInicial") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataInicial,
+            @RequestParam(value = "dataFinal") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataFinal) {
 
         List<TransferenciaEntity> transferencias = bancoService.transferenciasByNumConta(numeroConta);
         BigDecimal saldoTotalPeriodo = bancoService.calcularSaldoTotalPeriodo(transferencias, dataInicial, dataFinal);
