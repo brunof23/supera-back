@@ -13,8 +13,6 @@ public class ContaEntity {
     @Column(name = "nome_responsavel", nullable = false, length = 50)
     private String nomeResponsavel;
 
-    // Construtores, getters e setters
-
     public ContaEntity() {
     }
 

@@ -24,12 +24,9 @@ public class TransferenciaEntity {
     @Column(name = "nome_operador_transacao", length = 50)
     private String nomeOperadorTransacao;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "conta_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "conta_id", referencedColumnName = "id_conta")
     private ContaEntity conta;
-
-    public TransferenciaEntity() {
-    }
 
     public TransferenciaEntity(LocalDateTime dataTransferencia, BigDecimal valor, String tipo, String nomeOperadorTransacao, ContaEntity conta) {
         this.dataTransferencia = dataTransferencia;
@@ -37,6 +34,10 @@ public class TransferenciaEntity {
         this.tipo = tipo;
         this.nomeOperadorTransacao = nomeOperadorTransacao;
         this.conta = conta;
+    }
+
+    public TransferenciaEntity() {
+
     }
 
     public Long getId() {
