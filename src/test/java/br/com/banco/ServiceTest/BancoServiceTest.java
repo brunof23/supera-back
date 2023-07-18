@@ -49,12 +49,12 @@ class BancoServiceTest {
         Long idConta = 1L;
         List<TransferenciaEntity> transferencias = new ArrayList<>();
         transferencias.add(new TransferenciaEntity());
-        when(transferenciaRepository.findAllByContaId(idConta)).thenReturn(transferencias);
+        when(transferenciaRepository.transferenciasByConta(idConta)).thenReturn(transferencias);
 
-        List<TransferenciaEntity> result = bancoService.transferenciasByNumConta(idConta);
+        List<TransferenciaEntity> result = bancoService.transferenciasByConta(idConta);
 
         Assertions.assertEquals(1, result.size());
-        verify(transferenciaRepository, times(1)).findAllByContaId(idConta);
+        verify(transferenciaRepository, times(1)).transferenciasByConta(idConta);
     }
 
     @Test
@@ -97,6 +97,22 @@ class BancoServiceTest {
 
         Assertions.assertEquals(1, result.size());
         verify(transferenciaRepository, times(1)).transferenciasAllFiltros(dataInicial, dataFinal, nomeOperador);
+    }
+
+    @Test
+    void testTransferenciasAllFiltrosConta() {
+        LocalDateTime dataInicial = LocalDateTime.now();
+        LocalDateTime dataFinal = LocalDateTime.now().plusDays(1);
+        String nomeOperador = "João";
+        Long numeroConta = 1L;
+        List<TransferenciaEntity> transferencias = new ArrayList<>();
+        transferencias.add(new TransferenciaEntity());
+        when(transferenciaRepository.transferenciasAllFiltrosConta(dataInicial, dataFinal, nomeOperador, numeroConta)).thenReturn(transferencias);
+
+        List<TransferenciaEntity> result = bancoService.transferenciasAllFiltrosConta(dataInicial, dataFinal, nomeOperador, numeroConta);
+
+        Assertions.assertEquals(1, result.size());
+        verify(transferenciaRepository, times(1)).transferenciasAllFiltrosConta(dataInicial, dataFinal, nomeOperador, numeroConta);
     }
 
     @Test

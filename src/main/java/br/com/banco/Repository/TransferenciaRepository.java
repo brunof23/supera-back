@@ -14,6 +14,9 @@ public interface TransferenciaRepository extends JpaRepository<TransferenciaEnti
     @Query("SELECT t FROM TransferenciaEntity t WHERE t.dataTransferencia BETWEEN :dataInicial AND :dataFinal AND t.nomeOperadorTransacao = :nomeOperador")
     List<TransferenciaEntity> transferenciasAllFiltros(LocalDateTime dataInicial, LocalDateTime dataFinal, String nomeOperador);
 
+    @Query("SELECT t FROM TransferenciaEntity t WHERE t.dataTransferencia BETWEEN :dataInicial AND :dataFinal AND t.nomeOperadorTransacao = :nomeOperador AND t.conta.id  = :id_conta")
+    List<TransferenciaEntity> transferenciasAllFiltrosConta(LocalDateTime dataInicial, LocalDateTime dataFinal, String nomeOperador, Long id_conta);
+
     @Query("SELECT t FROM TransferenciaEntity t WHERE t.dataTransferencia BETWEEN :dataInicial AND :dataFinal")
     List<TransferenciaEntity> transferenciasByData(LocalDateTime dataInicial, LocalDateTime dataFinal);
 
@@ -21,5 +24,5 @@ public interface TransferenciaRepository extends JpaRepository<TransferenciaEnti
     List<TransferenciaEntity> transferenciasByOperador(String nomeOperador);
 
     @Query("SELECT t FROM TransferenciaEntity t WHERE t.conta.id = :id_conta")
-    List<TransferenciaEntity> findAllByContaId(@Param("id_conta") Long id_conta);
+    List<TransferenciaEntity> transferenciasByConta(@Param("id_conta") Long id_conta);
 }

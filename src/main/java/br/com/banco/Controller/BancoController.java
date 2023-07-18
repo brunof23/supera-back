@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/banco")
 public class BancoController {
@@ -31,7 +32,7 @@ public class BancoController {
     public ResponseEntity<List<TransferenciaEntity>> transferenciasByConta(
             @PathVariable(value = "numeroConta") Long numeroConta) {
 
-        List<TransferenciaEntity> transferencias = bancoService.transferenciasByNumConta(numeroConta);
+        List<TransferenciaEntity> transferencias = bancoService.transferenciasByConta(numeroConta);
         return ResponseEntity.ok(transferencias);
     }
 
@@ -61,11 +62,22 @@ public class BancoController {
         List<TransferenciaEntity> transferencias = bancoService.transferenciasAllFiltros(dataInicial, dataFinal, nomeOperador);
         return ResponseEntity.ok(transferencias);
     }
+
+    @GetMapping("/transferencias-todos-filtros-conta")
+    public ResponseEntity<List<TransferenciaEntity>> transferenciasAllFiltrosConta(
+            @RequestParam(value = "dataInicial") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataInicial,
+            @RequestParam(value = "dataFinal") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataFinal,
+            @RequestParam(value = "nomeOperador") String nomeOperador,
+            @RequestParam(value = "numeroConta") Long numeroConta) {
+
+        List<TransferenciaEntity> transferencias = bancoService.transferenciasAllFiltrosConta(dataInicial, dataFinal, nomeOperador, numeroConta);
+        return ResponseEntity.ok(transferencias);
+    }
     @GetMapping("/saldo-total/{numeroConta}")
     public ResponseEntity<BigDecimal> calcularSaldoTotal(
             @PathVariable(value = "numeroConta") Long numeroConta) {
 
-        List<TransferenciaEntity> transferencias = bancoService.transferenciasByNumConta(numeroConta);
+        List<TransferenciaEntity> transferencias = bancoService.transferenciasByConta(numeroConta);
         BigDecimal saldoTotal = bancoService.calcularSaldoTotal(transferencias);
         return ResponseEntity.ok(saldoTotal);
     }
@@ -76,7 +88,7 @@ public class BancoController {
             @RequestParam(value = "dataInicial") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataInicial,
             @RequestParam(value = "dataFinal") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataFinal) {
 
-        List<TransferenciaEntity> transferencias = bancoService.transferenciasByNumConta(numeroConta);
+        List<TransferenciaEntity> transferencias = bancoService.transferenciasByConta(numeroConta);
         BigDecimal saldoTotalPeriodo = bancoService.calcularSaldoTotalPeriodo(transferencias, dataInicial, dataFinal);
         return ResponseEntity.ok(saldoTotalPeriodo);
     }

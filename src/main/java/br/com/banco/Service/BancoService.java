@@ -23,8 +23,8 @@ public class BancoService {
     public List<TransferenciaEntity> allTransferencias() {
         return transferenciaRepository.findAll();
     }
-    public List<TransferenciaEntity> transferenciasByNumConta(Long idConta) {
-        return transferenciaRepository.findAllByContaId(idConta);
+    public List<TransferenciaEntity> transferenciasByConta(Long idConta) {
+        return transferenciaRepository.transferenciasByConta(idConta);
     }
     public List<TransferenciaEntity> transferenciasByData(LocalDateTime dataInicial, LocalDateTime dataFinal) {
         return transferenciaRepository.transferenciasByData(dataInicial, dataFinal);
@@ -34,6 +34,10 @@ public class BancoService {
     }
     public List<TransferenciaEntity> transferenciasAllFiltros(LocalDateTime dataInicial, LocalDateTime dataFinal, String nomeOperador) {
         return transferenciaRepository.transferenciasAllFiltros(dataInicial, dataFinal, nomeOperador);
+    }
+
+    public List<TransferenciaEntity> transferenciasAllFiltrosConta(LocalDateTime dataInicial, LocalDateTime dataFinal, String nomeOperador, Long numeroConta) {
+        return transferenciaRepository.transferenciasAllFiltrosConta(dataInicial, dataFinal, nomeOperador, numeroConta);
     }
 
     public BigDecimal calcularSaldoTotal(List<TransferenciaEntity> transferencias) {
